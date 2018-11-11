@@ -2,4 +2,7 @@ def newfunction():
     return hi
 
 def secondfunction():
-    return "hi" 
+    return "hi"
+
+def thirdfunction():
+    return "hi"
