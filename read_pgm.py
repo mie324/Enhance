@@ -3,7 +3,7 @@ import numpy
 
 def read_pgm(filename, byteorder='>'):
 
-    with open('one.pgm', 'rb') as f:
+    with open(filename, 'rb') as f:
         buffer = f.read()
     try:
         header, width, height, maxval = re.search(
