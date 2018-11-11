@@ -1,5 +1,8 @@
 def newfunction():
-    return hi
+    return "hi"
 
 def secondfunction():
-    return "hi" 
+    return "hi"
+
+def athirdfunction():
+    return "yo wtf is git"
