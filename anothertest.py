@@ -5,7 +5,7 @@ from read_pgm import *
 import skimage.transform as skt
 
 if __name__ == '__main__':
-    imageyale = read_pgm("CroppedYale\yaleB01\yaleB01_P00A+000E+00.pgm")
+    imageyale = read_pgm("C:/Users/Saad/Documents/MIEProject/Enhance/CroppedYale/yaleB07/yaleB07_P00A-010E-20.pgm")
     plt.subplot(3,1,1)
     plt.imshow(imageyale, plt.cm.gray)
     print(imageyale.shape)
