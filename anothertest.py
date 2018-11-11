@@ -1,0 +1,2 @@
+def newfunction():
+    return hi
