@@ -1,0 +1,2 @@
+def okay():
+    return hi
