@@ -67,8 +67,8 @@ if __name__ == '__main__':
                                                                            0.5)), ])  # We create a list of transformations (scaling, tensor conversion, normalization) to apply to the input images.
     netG, criterion, optimizerG = load_GAN(lr=lr)
     netG = netG.to(device)
-
     netG.apply(weights_init)
+
     netD, criterion, optimizerD = load_DISC(lr=lr)
     netD = netD.to(device)
     netD.apply(weights_init)
@@ -131,7 +131,7 @@ if __name__ == '__main__':
             # ErrG is a comparison of what the discriminator thinks the fake image is
             # and 1s. we want to minimize this loss because we want to make sure the discriminator predict
             # 1s for the fake image
-
+            target = target.to(device)
             errG = criterion(output, target)
             errG.backward()
 
