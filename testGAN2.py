@@ -8,7 +8,7 @@ import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
 from torch.autograd import Variable
-from model_test_2 import *
+from models import *
 import torch.utils.data as data_utils
 from dataset import ImgDataset
 import numpy as np
@@ -31,7 +31,7 @@ def weights_init(m):
 
 def load_GAN(lr):
     netG = G()
-    loss_fnc = nn.BCELoss()
+    loss_fnc = nn.MSELoss()
     optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(0.5, 0.999))
     ######
 
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     training_loader, validation_loader = load_data(batchSize, training_set_feat, training_set_labels,
                                                    validation_set_feat, validation_set_labels)
 
-    for epoch in range(100):
+    for epoch in range(25):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
             # print('step', i)
@@ -136,15 +136,6 @@ if __name__ == '__main__':
             errG.backward()
 
             optimizerG.step()
-
-            # print(type(real))
-            # print(type(fake))
-
-            # real = real.detach().numpy()
-            # fake = fake.detach().numpy().squeeze()
-
-            # print(np.shape(fake))
-            # print(np.shape(real))
 
             print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f' % (
             epoch, 25, i, len(training_loader), errD.data[0], errG.data[0]))
