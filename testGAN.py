@@ -131,8 +131,14 @@ if __name__ == '__main__':
             else:
                 output = netD(input.float())
             output = output.view(-1)
-            errD_real = criterion(output, target) # Criterion = Loss function
-            #print(errD_real)
+            print(output.size())
+            print(target.size())
+            while True:
+                pass
+            errD_real = criterion(output, target)
+
+
+
 
 
             noise = Variable(lowres)
