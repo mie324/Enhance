@@ -8,7 +8,7 @@ import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
 from torch.autograd import Variable
-from models import *
+from model_test_2 import *
 import torch.utils.data as data_utils
 from dataset import ImgDataset
 import numpy as np
