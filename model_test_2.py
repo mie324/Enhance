@@ -39,7 +39,7 @@ class upsampleBlock(nn.Module):
         return swish(self.shuffler(self.conv(x)))
 
 class G(nn.Module):
-    def __init__(self, n_residual_blocks=8, upsample_factor=2):
+    def __init__(self, n_residual_blocks=16, upsample_factor=2):
         super(G, self).__init__()
         self.n_residual_blocks = n_residual_blocks
         self.upsample_factor = upsample_factor
@@ -57,6 +57,9 @@ class G(nn.Module):
 
         self.conv3 = nn.Conv2d(64, 1, 9, stride=1, padding=4)
 
+        self.conv4 = nn.Conv2d(1, 1, 11)
+        self.conv5 = nn.Conv2d(1, 1, (13, 9))
+
     def forward(self, x):
         x = swish(self.conv1(x))
 
@@ -69,7 +72,10 @@ class G(nn.Module):
         for i in range(self.upsample_factor/2):
             x = self.__getattr__('upsample' + str(i+1))(x)
 
-        return self.conv3(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        return x
 
 class D(nn.Module):
     def __init__(self):
