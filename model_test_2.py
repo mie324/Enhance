@@ -39,7 +39,7 @@ class upsampleBlock(nn.Module):
         return swish(self.shuffler(self.conv(x)))
 
 class G(nn.Module):
-    def __init__(self, n_residual_blocks, upsample_factor):
+    def __init__(self, n_residual_blocks=8, upsample_factor=2):
         super(G, self).__init__()
         self.n_residual_blocks = n_residual_blocks
         self.upsample_factor = upsample_factor

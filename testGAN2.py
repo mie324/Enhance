@@ -8,7 +8,7 @@ import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
 from torch.autograd import Variable
-from models import *
+from model_test_2 import *
 import torch.utils.data as data_utils
 from dataset import ImgDataset
 import numpy as np
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     training_loader, validation_loader = load_data(batchSize, training_set_feat, training_set_labels,
                                                    validation_set_feat, validation_set_labels)
 
-    for epoch in range(25):
+    for epoch in range(5):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
             # print('step', i)
@@ -113,11 +113,14 @@ if __name__ == '__main__':
 
             noise = noise.to(device)
             fake = netG(noise.float())
+            print("generator output size", fake.size())
 
             target = Variable(torch.zeros(input.size()[0]))
             target = target.to(device)
 
             output = netD(fake.detach())
+            print("disc output size", output.size())
+
             errD_fake = criterion(output, target)
 
             errD = errD_real + errD_fake
