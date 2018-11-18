@@ -87,7 +87,7 @@ if __name__ == '__main__':
     training_loader, validation_loader = load_data(batchSize, training_set_feat, training_set_labels,
                                                    validation_set_feat, validation_set_labels)
 
-    for epoch in range(25):
+    for epoch in range(100):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
             # print('step', i)
