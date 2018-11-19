@@ -113,6 +113,8 @@ if __name__ == '__main__':
             noise = noise.to(device)
             fake = netG(noise.float())
 
+            print("generator output size", fake.size() )
+
             target = Variable(torch.zeros(input.size()[0]))
             target = target.to(device)
 
