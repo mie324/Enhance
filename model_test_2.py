@@ -52,13 +52,13 @@ class G(nn.Module):
         self.conv2 = nn.Conv2d(64, 64, 3, stride=1, padding=1)
         self.bn2 = nn.BatchNorm2d(64)
 
-        for i in range(self.upsample_factor/2):
+        for i in range(int(self.upsample_factor/2)):
             self.add_module('upsample' + str(i+1), upsampleBlock(64, 256))
 
         self.conv3 = nn.Conv2d(64, 1, 9, stride=1, padding=4)
 
-        self.conv4 = nn.Conv2d(1, 1, 11)
-        self.conv5 = nn.Conv2d(1, 1, (13, 9))
+        #self.conv4 = nn.Conv2d(1, 1, 11)
+        #self.conv5 = nn.Conv2d(1, 1, (13, 9))
 
     def forward(self, x):
         x = swish(self.conv1(x))
@@ -69,12 +69,12 @@ class G(nn.Module):
 
         x = self.bn2(self.conv2(y)) + x
 
-        for i in range(self.upsample_factor/2):
+        for i in range(int(self.upsample_factor/2)):
             x = self.__getattr__('upsample' + str(i+1))(x)
 
         x = self.conv3(x)
-        x = self.conv4(x)
-        x = self.conv5(x)
+       # x = self.conv4(x)
+       # x = self.conv5(x)
         return x
 
 class D(nn.Module):
