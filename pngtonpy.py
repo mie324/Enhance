@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 numyale = 2447
 numATT = 390
-totalimages = numyale + numATT
+totalimages = numyale
 
 highres = np.zeros((totalimages, 112, 92))
 lowres = np.zeros((totalimages, 56, 46))
@@ -44,6 +44,7 @@ for i in range(numATT):
 '''
 print('OurHighRes =', highres[totalimages-1])
 print('OurLowRes =',lowres[totalimages-1])
-
+print(highres.shape)
+print(lowres.shape)
 np.save("imagedataset/highresimages.npy", highres)
 np.save("imagedataset/lowresimages.npy", lowres)
