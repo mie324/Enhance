@@ -6,7 +6,7 @@ numATT = 390
 totalimages = numyale + numATT
 
 highres = np.zeros((totalimages, 112, 92))
-lowres = np.zeros((totalimages, 67, 55))
+lowres = np.zeros((totalimages, 56, 46))
 
 yaleHRfolder = 'HighResCroppedYale/'
 yaleLRfolder = 'LowResCroppedYale/'
@@ -27,7 +27,7 @@ for i in range(numyale):
 
     highres[i] = hrArray
     lowres[i] = lrArray
-
+'''
 for i in range(numATT):
     print('Iteration = ', numyale+i)
     highresfile = attHRfolder+str(i+1)+'.png'
@@ -41,7 +41,7 @@ for i in range(numATT):
 
     highres[numyale+i] = hrArray
     lowres[numyale+i] = lrArray
-
+'''
 print('OurHighRes =', highres[totalimages-1])
 print('OurLowRes =',lowres[totalimages-1])
 

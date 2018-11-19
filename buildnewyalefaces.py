@@ -20,10 +20,10 @@ for i in range(1,40):
         if filename.endswith(".pgm"):
 
             try:
-                print(os.path.join(path, filename))
+                #print(os.path.join(path, filename))
                 imageyale = read_pgm(os.path.join(path, filename))
                 imageyalecropped = skt.resize(imageyale, (112, 92))
-                imageyalelowres = skt.resize(imageyale, (67, 55))
+                imageyalelowres = skt.resize(imageyale, (56, 46))
 
                 counter += 1
 
@@ -31,8 +31,9 @@ for i in range(1,40):
                 lowrespath = 'LowResCroppedYale/'+str(counter) +'.png'
                 sp.misc.imsave(highrespath, imageyalecropped)
                 sp.misc.imsave(lowrespath, imageyalelowres)
-                print('Cropped shape',imageyalecropped.shape)
-                print('Low res shape', imageyalelowres.shape)
+                print(counter)
+                #print('Cropped shape',imageyalecropped.shape)
+                #print('Low res shape', imageyalelowres.shape)
             except:
                 pass
             continue
