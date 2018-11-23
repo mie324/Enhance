@@ -65,7 +65,7 @@ if __name__ == '__main__':
     transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor(),
                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5,
                                                                            0.5)), ])  # We create a list of transformations (scaling, tensor conversion, normalization) to apply to the input images.
-    netG, criterion, optimizerG = load_GAN(lr=lr)
+    netG, criterion, optimizerG = load_GAN(lr=50*lr)
     netG = netG.to(device)
     netG.apply(weights_init)
 
@@ -79,14 +79,17 @@ if __name__ == '__main__':
     labels = np.load('./imagedataset/highresimages.npy')
     features = np.load('./imagedataset/lowresimages.npy')
 
+
     seed = 0
     training_set_feat, validation_set_feat, training_set_labels, validation_set_labels \
         = train_test_split(features, labels, test_size=0.2, random_state=seed)
 
     training_loader, validation_loader = load_data(batchSize, training_set_feat, training_set_labels,
-                                                   validation_set_feat, validation_set_labels)
+                                         validation_set_feat, validation_set_labels)
 
-    for epoch in range(25):
+    corr = 0
+    corr2 = 0
+    for epoch in range(200):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
             # print('step', i)
@@ -101,8 +104,11 @@ if __name__ == '__main__':
             output = netD(input.float())
 
             output = output.view(-1)
-            print(type(output))
-            print(target.size())
+
+            corr2  += int(sum(output > 0.5))
+
+           # print(type(output))
+           # print(target.size())
 
             target = target.to(device)
             errD_real = criterion(output, target)
@@ -113,12 +119,17 @@ if __name__ == '__main__':
             noise = noise.to(device)
             fake = netG(noise.float())
 
-            print("generator output size", fake.size() )
+           # print("generator output size", fake.size() )
 
             target = Variable(torch.zeros(input.size()[0]))
             target = target.to(device)
 
             output = netD(fake.detach())
+            output = output.view(-1)
+
+            corr += int(sum(output<0.5))
+
+
 
             errD_fake = criterion(output, target)
 
@@ -145,6 +156,16 @@ if __name__ == '__main__':
             epoch, 25, i, len(training_loader), errD.data[0], errG.data[0]))
 
         print("Epoch Ended")
+        print("Fake image accuracy(Discriminator)", corr/len(training_loader.dataset))
+
+        print("Real Image Accuracy (Discriminator)" , corr2/len(training_loader.dataset))
+
+        print("Combined Accuracy (Discriminator)", ((corr + corr2)/(2*len(training_loader.dataset))))
+
+        corr = 0
+        corr2 = 0
+
+
         vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./results", epoch), normalize=True)
         fake = netG(noise.float())
         vutils.save_image(fake[0], '%s/fake_samples_epoch_%03d.png' % ("./results", epoch), normalize=True)
