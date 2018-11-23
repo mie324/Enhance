@@ -59,13 +59,13 @@ if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     run()
-    batchSize = 64
+    batchSize = 32
     imageSize = 64
     lr = 0.0002
     transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor(),
                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5,
                                                                            0.5)), ])  # We create a list of transformations (scaling, tensor conversion, normalization) to apply to the input images.
-    netG, criterion, optimizerG = load_GAN(lr=50*lr)
+    netG, criterion, optimizerG = load_GAN(lr=500*lr)
     netG = netG.to(device)
     netG.apply(weights_init)
 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
             noise = noise.to(device)
             fake = netG(noise.float())
 
-           # print("generator output size", fake.size() )
+            #print("generator output size", fake.size() )
 
             target = Variable(torch.zeros(input.size()[0]))
             target = target.to(device)
@@ -140,6 +140,7 @@ if __name__ == '__main__':
             netG.zero_grad()
             target = Variable(torch.ones(input.size()[0]))
             output = netD(fake)
+        
 
             # ErrG is a comparison of what the discriminator thinks the fake image is
             # and 1s. we want to minimize this loss because we want to make sure the discriminator predict

@@ -16,7 +16,7 @@ class FeatureExtractor(nn.Module):
 
 
 class residualBlock(nn.Module):
-    def __init__(self, in_channels=64, k=3, n=64, s=1):
+    def __init__(self, in_channels=20, k=3, n=20, s=1):
         super(residualBlock, self).__init__()
 
         self.conv1 = nn.Conv2d(in_channels, n, k, stride=s, padding=1)
@@ -44,18 +44,18 @@ class G(nn.Module):
         self.n_residual_blocks = n_residual_blocks
         self.upsample_factor = upsample_factor
 
-        self.conv1 = nn.Conv2d(1, 64, 9, stride=1, padding=4)
+        self.conv1 = nn.Conv2d(1, 20, 9, stride=1, padding=4)
 
         for i in range(self.n_residual_blocks):
             self.add_module('residual_block' + str(i+1), residualBlock())
 
-        self.conv2 = nn.Conv2d(64, 64, 3, stride=1, padding=1)
-        self.bn2 = nn.BatchNorm2d(64)
+        self.conv2 = nn.Conv2d(20, 20, 3, stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(20)
 
         for i in range(int(self.upsample_factor/2)):
-            self.add_module('upsample' + str(i+1), upsampleBlock(64, 256))
+            self.add_module('upsample' + str(i+1), upsampleBlock(20, 80))
 
-        self.conv3 = nn.Conv2d(64, 1, 9, stride=1, padding=4)
+        self.conv3 = nn.Conv2d(20, 1, 9, stride=1, padding=4)
 
         #self.conv4 = nn.Conv2d(1, 1, 11)
         #self.conv5 = nn.Conv2d(1, 1, (13, 9))
