@@ -32,7 +32,7 @@ def weights_init(m):
 
 def load_GAN(lr):
     netG = G()
-    loss_fnc = nn.MSELoss()
+    loss_fnc = nn.BCELoss()
     optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(0.5, 0.999))
     ######
 
@@ -59,13 +59,13 @@ def load_data(batch_size, training_set_feat, training_set_labels, validation_set
 if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     run()
-    batchSize = 32
+    batchSize = 64
     imageSize = 64
     lr = 0.0002
     transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor(),
                                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5,
                                                                            0.5)), ])  # We create a list of transformations (scaling, tensor conversion, normalization) to apply to the input images.
-    netG, criterion, optimizerG = load_GAN(lr=500*lr)
+    netG, criterion, optimizerG = load_GAN(lr=lr)
     netG = netG.to(device)
     netG.apply(weights_init)
 
@@ -74,8 +74,8 @@ if __name__ == '__main__':
     netD.apply(weights_init)
 
 
-    feature_extractor = FeatureExtractor(torchvision.models.vgg19(pretrained=True))
-    feature_extractor = feature_extractor.to(device)
+    #feature_extractor = FeatureExtractor(torchvision.models.vgg19(pretrained=True))
+    #feature_extractor = feature_extractor.to(device)
 
     content_criterion = nn.MSELoss()
     adverserial_criterion = nn.BCELoss()
@@ -106,10 +106,10 @@ if __name__ == '__main__':
             lowres, real = batch
 
             real = Variable(real)
-            ones_const = Variable(torch.ones(input.size()[0]))
+            ones_const = Variable(torch.ones(real.size()[0]))
             real = real.unsqueeze(1)
 
-            real = input.to(device)
+            real = real.to(device)
             output = netD(real.float())
             output = output.view(-1)
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
             noise = noise.to(device)
             fake = netG(noise.float())
 
-            zero_const = Variable(torch.zeros(input.size()[0]))
+            zero_const = Variable(torch.zeros(real.size()[0]))
             zero_const = zero_const.to(device)
 
             output = netD(fake.detach())
@@ -139,19 +139,19 @@ if __name__ == '__main__':
 
             #Training Generator
             netG.zero_grad()
+            
+            real = real.to(device)
+            fake = fake.to(device)
 
-            real_features = Variable(feature_extractor(Variable(real)).data)
-            fake_features = feature_extractor(Variable(fake))
-
-            generator_content_loss = content_criterion(fake, real) + 0.006 * content_criterion(
-                fake_features, real_features)
+            generator_content_loss = content_criterion(fake, real.float())
 
             output = netD(fake.detach())
             output = output.view(-1)
 
-            ones_const = Variable(torch.ones(input.size()[0]))
+            ones_const = Variable(torch.ones(real.size()[0]))
+            ones_const =  ones_const.to(device)
 
-            generator_adversarial_loss = adverserial_criterion(output, ones_const)
+            generator_adversarial_loss = adverserial_criterion(output, ones_const.float())
             errG = generator_content_loss + 1e-3 * generator_adversarial_loss
 
             errG.backward()
