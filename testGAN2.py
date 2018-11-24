@@ -174,3 +174,7 @@ if __name__ == '__main__':
         vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./results", epoch), normalize=True)
         fake = netG(noise.float())
         vutils.save_image(fake[0], '%s/fake_samples_epoch_%03d.png' % ("./results", epoch), normalize=True)
+
+
+    torch.save(netD, 'Discriminator.pt')
+    torch.save(netG, 'Generator.pt')
