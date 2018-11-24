@@ -6,14 +6,6 @@ from torch.autograd import Variable
 def swish(x):
     return x * F.sigmoid(x)
 
-class FeatureExtractor(nn.Module):
-    def __init__(self, cnn, feature_layer=11):
-        super(FeatureExtractor, self).__init__()
-        self.features = nn.Sequential(*list(cnn.features.children())[:(feature_layer+1)])
-
-    def forward(self, x):
-        return self.features(x)
-
 
 class residualBlock(nn.Module):
     def __init__(self, in_channels=20, k=3, n=20, s=1):
