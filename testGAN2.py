@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
     corr = 0
     corr2 = 0
-    for epoch in range(200):
+    for epoch in range(25):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
 
