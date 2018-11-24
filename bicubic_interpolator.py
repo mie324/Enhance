@@ -18,9 +18,8 @@ for filename in os.listdir(start_path):
         print(filename)
         print('Low res image size', lowres_image.shape)
         print('Upscaled image size', upscaled_image.shape)
-        print(start_path+'lowres_samples_epoch_'+str(counter)+'.png',)
-        print(start_path+'interpolated_samples_epoch_'+str(counter)+'.png')
-        sp.misc.imsave(start_path+'lowres_samples_epoch_'+str(counter)+'.png', lowres_image)
-        sp.misc.imsave(start_path+'interpolated_samples_epoch_'+str(counter)+'.png', upscaled_image)
+        print(start_path+'lowres_samples_epoch_%03d.png'%(counter))
+        sp.misc.imsave(start_path+'lowres_samples_epoch_%03d.png'%(counter), lowres_image)
+        sp.misc.imsave(start_path+'interpolated_samples_epoch_%03d.png'%(counter), upscaled_image)
         print(counter)
         counter += 1
