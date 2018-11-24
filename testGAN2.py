@@ -13,6 +13,7 @@ import torch.utils.data as data_utils
 from dataset import ImgDataset
 import numpy as np
 from sklearn.model_selection import train_test_split
+import torchvision
 
 
 def run():
@@ -57,7 +58,6 @@ def load_data(batch_size, training_set_feat, training_set_labels, validation_set
 
 if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
     run()
     batchSize = 32
     imageSize = 64
@@ -72,6 +72,13 @@ if __name__ == '__main__':
     netD, criterion, optimizerD = load_DISC(lr=lr)
     netD = netD.to(device)
     netD.apply(weights_init)
+
+
+    feature_extractor = FeatureExtractor(torchvision.models.vgg19(pretrained=True))
+    feature_extractor = feature_extractor.to(device)
+
+    content_criterion = nn.MSELoss()
+    adverserial_criterion = nn.BCELoss()
 
     ''' Get numpy arrays into one array, split amongst training and validation, pass into 
     load _data function and create dataloader classes for training and validation'''
@@ -92,26 +99,24 @@ if __name__ == '__main__':
     for epoch in range(200):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
-            # print('step', i)
+
+            #Training Discriminator
+
             netD.zero_grad()
             lowres, real = batch
 
-            input = Variable(real)
-            target = Variable(torch.ones(input.size()[0]))
-            input = input.unsqueeze(1)
+            real = Variable(real)
+            ones_const = Variable(torch.ones(input.size()[0]))
+            real = real.unsqueeze(1)
 
-            input = input.to(device)
-            output = netD(input.float())
-
+            real = input.to(device)
+            output = netD(real.float())
             output = output.view(-1)
 
-            corr2  += int(sum(output > 0.5))
+            corr2 += int(sum(output > 0.5))
 
-           # print(type(output))
-           # print(target.size())
-
-            target = target.to(device)
-            errD_real = criterion(output, target)
+            ones_const = ones_const.to(device)
+            errD_real = criterion(output, ones_const)
 
             noise = Variable(lowres)
             noise = noise.unsqueeze(1)
@@ -119,38 +124,37 @@ if __name__ == '__main__':
             noise = noise.to(device)
             fake = netG(noise.float())
 
-            #print("generator output size", fake.size() )
-
-            target = Variable(torch.zeros(input.size()[0]))
-            target = target.to(device)
+            zero_const = Variable(torch.zeros(input.size()[0]))
+            zero_const = zero_const.to(device)
 
             output = netD(fake.detach())
             output = output.view(-1)
 
             corr += int(sum(output<0.5))
-
-
-
-            errD_fake = criterion(output, target)
-
+            errD_fake = criterion(output, zero_const)
             errD = errD_real + errD_fake
             errD.backward()
             optimizerD.step()
 
+
+            #Training Generator
             netG.zero_grad()
-            target = Variable(torch.ones(input.size()[0]))
-            output = netD(fake)
-        
 
-            # ErrG is a comparison of what the discriminator thinks the fake image is
-            # and 1s. we want to minimize this loss because we want to make sure the discriminator predict
-            # 1s for the fake image
-            target = target.to(device)
+            real_features = Variable(feature_extractor(Variable(real)).data)
+            fake_features = feature_extractor(Variable(fake))
 
+            generator_content_loss = content_criterion(fake, real) + 0.006 * content_criterion(
+                fake_features, real_features)
 
-            errG = criterion(output, target)
+            output = netD(fake.detach())
+            output = output.view(-1)
+
+            ones_const = Variable(torch.ones(input.size()[0]))
+
+            generator_adversarial_loss = adverserial_criterion(output, ones_const)
+            errG = generator_content_loss + 1e-3 * generator_adversarial_loss
+
             errG.backward()
-
             optimizerG.step()
 
             print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f' % (
