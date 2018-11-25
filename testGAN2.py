@@ -109,7 +109,7 @@ if __name__ == '__main__':
     validation_loss_D = []
     validation_loss_G = []
 
-    for epoch in range(25):
+    for epoch in range(5):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
 
@@ -186,12 +186,12 @@ if __name__ == '__main__':
                     noise = noise.to(device)
                     fake_eval = netG(noise.float())
 
-                    fake_eval2 = np.array(fake_eval.detach())
+
+                    fake_eval2 = fake_eval.squeeze(1)
+                    fake_eval2 = np.array(fake_eval2.detach())
                     lowres_eval2 = np.array(lowres_eval.detach())
                     real_eval2 = np.array(real_eval.detach())
 
-                    print(np.shape(lowres_eval2))
-                    print(np.shape(real_eval2))
                     print(np.shape(fake_eval2))
 
                     total_psnrgen, total_psnrint = evaluate(lowres_eval2, fake_eval2, real_eval2)
@@ -199,13 +199,14 @@ if __name__ == '__main__':
                     psnrgen.append(total_psnrgen)
                     psnrint.append(total_psnrint)
 
-                    training_loss_G.append(errG)
+                    training_loss_G.append(errG.item())
 
 
                     #Validation Loss Stuff
 
                     real = real_eval
-                    fake = fake_eval
+                    fake2 = fake
+                    fake = fake_eval.squeeze(1)
                     fake = fake.float()
 
 
@@ -214,7 +215,7 @@ if __name__ == '__main__':
 
                     generator_content_loss = content_criterion(fake, real.float())
 
-                    output = netD(fake.detach())
+                    output = netD(fake2.detach())
                     output = output.view(-1)
 
                     ones_const = Variable(torch.ones(real.size()[0]))
@@ -223,7 +224,7 @@ if __name__ == '__main__':
                     generator_adversarial_loss = adverserial_criterion(output, ones_const.float())
                     errG = generator_content_loss + 1e-3 * generator_adversarial_loss
 
-                    validation_loss_G.append(errG)
+                    validation_loss_G.append(errG.item())
 
 
 
@@ -250,6 +251,11 @@ if __name__ == '__main__':
 
     torch.save(netD, 'Discriminator.pt')
     torch.save(netG, 'Generator.pt')
+
+    print(psnrint)
+    print(psnrgen)
+    print(validation_loss_G)
+    print(training_loss_G)
 
     training_loss_G = np.array(training_loss_G)
     validation_loss_G = np.array(validation_loss_G)
