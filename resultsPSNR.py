@@ -53,7 +53,7 @@ if __name__ == '__main__':
     fig = plt.figure()
     plt.plot(np.array([i+1 for i in range(args.images)]),psnrint)
     plt.plot(np.array([i+1 for i in range(args.images)]), psnrgen)
-    plt.legend(['PSNR of Intepolated', 'PSNR of Generated'])
+    plt.legend(['PSNR of Interpolated', 'PSNR of Generated'])
     plt.title('PSNR Value per Epoch for Select Sample')
     plt.xlabel('Epoch')
     plt.ylabel('PSNR (High is better image)')
