@@ -109,7 +109,7 @@ if __name__ == '__main__':
     validation_loss_D = []
     validation_loss_G = []
 
-    for epoch in range(5):
+    for epoch in range(50):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
 
@@ -252,17 +252,12 @@ if __name__ == '__main__':
     torch.save(netD, 'Discriminator.pt')
     torch.save(netG, 'Generator.pt')
 
-    print(psnrint)
-    print(psnrgen)
-    print(validation_loss_G)
-    print(training_loss_G)
-
     training_loss_G = np.array(training_loss_G)
     validation_loss_G = np.array(validation_loss_G)
     psnrint = np.array(psnrint)
     psnrgen = np.array(psnrgen)
 
-    np.save("training_loss_G", training_loss_G)
+    np.save("training_loss_g", training_loss_G)
     np.save("validation_loss_g", validation_loss_G)
     np.save("psnrint", psnrint)
     np.save("psnrgen", psnrgen)
