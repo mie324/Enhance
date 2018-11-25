@@ -20,21 +20,28 @@ if __name__ == '__main__':
     image = io.imread(args.imagepath, as_grey= True)
 
     lowres = resize(image, (56, 46))
-    real = resize(image, (112, 96))
-    interpolated = resize(lowres, (112,96))
+    real = resize(image, (112, 92))
+    interpolated = resize(lowres, (112,92))
 
     newname = args.imagepath[0:-4]
     path_name = newname+'Visualization.png'
 
     Generator = torch.load(args.model, map_location=device)
     Generator = Generator.to(device)
+    lowres = torch.from_numpy(lowres)
     myimage = Variable(lowres)
     myimage = myimage.to(device)
     myimage = myimage.unsqueeze(dim=0)
-    fake = Generator(myimage)
-    fake = np.array(fake.detach())
+    myimage = myimage.unsqueeze(dim=0)
+    fake = Generator(myimage.float())
+    fake = fake.squeeze(0)
+    fake = fake.squeeze(0)
 
-    psnrint = compare_psnr(real, interpolated/255)
+    fake = np.array(fake.detach())
+    print(np.shape(fake))
+    print(np.shape(real))
+
+    psnrint = compare_psnr(real, interpolated)
     psnrgen = compare_psnr(real, fake)
 
     fig = plt.figure()
