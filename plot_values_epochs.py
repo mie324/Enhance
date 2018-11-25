@@ -29,7 +29,6 @@ if __name__ == '__main__':
     plt.title('PSNR Value per Epoch for Select Sample')
     plt.xlabel('Epoch')
     plt.ylabel('PSNR (High is better image)')
-    plt.show()
     fig1.savefig('PSNROverEpochs.png', dpi = fig1.dpi)
 
     fig2 = plt.figure()
@@ -39,5 +38,4 @@ if __name__ == '__main__':
     plt.title('Generator Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
-    plt.show()
     fig2.savefig('GeneratorLossOverEpochs.png', dpi = fig2.dpi)
