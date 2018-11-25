@@ -60,6 +60,8 @@ def load_data(batch_size, training_set_feat, training_set_labels, validation_set
 
 
 if __name__ == '__main__':
+    torch.manual_seed(0)
+    np.random.seed(0)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     run()
     batchSize = 64
