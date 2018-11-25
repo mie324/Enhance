@@ -58,7 +58,7 @@ if __name__ == '__main__':
     plt.subplot(1,4,3)
     plt.imshow(interpolated, cmap = 'gray')
     plt.title('Interpolated image')
-    #plt.xlabel('PSNR value = %0.3f'%(psnrint))
+    plt.xlabel('PSNR value = %0.3f'%(psnrint))
 
     plt.subplot(1,4,4)
     plt.imshow(real, cmap = 'gray')
