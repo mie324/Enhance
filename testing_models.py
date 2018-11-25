@@ -85,7 +85,7 @@ for epoch in range(25):
         real = real.unsqueeze(1)
 
 
-    vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./temp_results", epoch), normalize=True)
+    vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./temp_results_2", epoch), normalize=True)
     #fake = Generator(noise.float())
     #vutils.save_image(fake[0], '%s/fake_samples_epoch_%03d.png' % ("./temp_results", epoch), normalize=True)
 
