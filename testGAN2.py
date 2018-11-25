@@ -186,9 +186,9 @@ if __name__ == '__main__':
                     noise = noise.to(device)
                     fake_eval = netG(noise.float())
 
-                    fake_eval2 = np.array(fake_eval)
-                    lowres_eval2 = np.array(lowres_eval)
-                    real_eval2 = np.array(real_eval)
+                    fake_eval2 = np.array(fake_eval.detach())
+                    lowres_eval2 = np.array(lowres_eval.detach())
+                    real_eval2 = np.array(real_eval.detach())
 
                     print(np.shape(lowres_eval2))
                     print(np.shape(real_eval2))
