@@ -3,6 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 
+
+torch.manual_seed(0)
+
 def swish(x):
     return x * F.sigmoid(x)
 
