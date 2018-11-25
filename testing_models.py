@@ -77,15 +77,11 @@ training_loader, validation_loader = load_data(batchSize, training_set_feat, tra
 for epoch in range(25):
     for i, batch in enumerate(training_loader):
         lowres, real = batch
+        print(real.size())
 
-
-
-
-        lowres = np.array(lowres)
-        real = np.array(real)
-
-        print(np.shape(real))
-        print(np.shape(lowres))
+        lowres = lowres.unsqueeze(1)
+        y = Generator(lowres.float())
+        print(y)
 
 
     #vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./temp_results_2", epoch), normalize=True)

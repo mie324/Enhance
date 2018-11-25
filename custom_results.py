@@ -10,6 +10,8 @@ from skimage import io
 from skimage.measure import compare_psnr
 
 if __name__ == '__main__':
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--imagepath', type=str, default='SaadFace.png')
     parser.add_argument('--model', type=str, default = 'Generator.pt')
@@ -24,8 +26,10 @@ if __name__ == '__main__':
     newname = args.imagepath[0:-4]
     path_name = newname+'Visualization.png'
 
-    Generator = torch.load(args.model)
+    Generator = torch.load(args.model, map_location=device)
+    Generator = Generator.to(device)
     myimage = Variable(lowres)
+    myimage = myimage.to(device)
     myimage = myimage.unsqueeze(dim=0)
     fake = Generator(myimage)
     fake = np.array(fake.detach())

@@ -6,7 +6,7 @@ from skimage import io
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=24)
+    parser.add_argument('--epoch', type=int, default=42)
     args = parser.parse_args()
 
     path_real = 'results/real_samples_epoch_%03d.png'%(args.epoch)
