@@ -78,14 +78,17 @@ for epoch in range(25):
     for i, batch in enumerate(training_loader):
         lowres, real = batch
 
-        noise = Variable(lowres)
-        noise = noise.unsqueeze(1)
-
-        real = Variable(real)
-        real = real.unsqueeze(1)
 
 
-    vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./temp_results_2", epoch), normalize=True)
+
+        lowres = np.array(lowres)
+        real = np.array(real)
+
+        print(np.shape(real))
+        print(np.shape(lowres))
+
+
+    #vutils.save_image(real[0], '%s/real_samples_epoch_%03d.png' % ("./temp_results_2", epoch), normalize=True)
     #fake = Generator(noise.float())
     #vutils.save_image(fake[0], '%s/fake_samples_epoch_%03d.png' % ("./temp_results", epoch), normalize=True)
 

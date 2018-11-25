@@ -14,6 +14,7 @@ from dataset import ImgDataset
 import numpy as np
 from sklearn.model_selection import train_test_split
 import torchvision
+from evaluating import evaluate
 
 torch.manual_seed(0)
 np.random.seed(0)
@@ -101,6 +102,13 @@ if __name__ == '__main__':
 
     corr = 0
     corr2 = 0
+    psnrgen = []
+    psnrint = []
+    training_loss_D = []
+    training_loss_G = []
+    validation_loss_D = []
+    validation_loss_G = []
+
     for epoch in range(25):
         print('Epoch', epoch)
         for i, batch in enumerate(training_loader):
@@ -162,6 +170,65 @@ if __name__ == '__main__':
             errG.backward()
             optimizerG.step()
 
+
+
+            ## Sending to evaluate from validation set
+
+            if i == 0:
+
+                for j, batch_val in enumerate(validation_loader):
+                    if j > 0 :
+                        break
+                    lowres_eval, real_eval = batch_val
+
+                    noise = Variable(lowres_eval)
+                    noise = noise.unsqueeze(1)
+                    noise = noise.to(device)
+                    fake_eval = netG(noise.float())
+
+                    fake_eval2 = np.array(fake_eval)
+                    lowres_eval2 = np.array(lowres_eval)
+                    real_eval2 = np.array(real_eval)
+
+                    print(np.shape(lowres_eval2))
+                    print(np.shape(real_eval2))
+                    print(np.shape(fake_eval2))
+
+                    total_psnrgen, total_psnrint = evaluate(lowres_eval2, fake_eval2, real_eval2)
+
+                    psnrgen.append(total_psnrgen)
+                    psnrint.append(total_psnrint)
+
+                    training_loss_G.append(errG)
+
+
+                    #Validation Loss Stuff
+
+                    real = real_eval
+                    fake = fake_eval
+                    fake = fake.float()
+
+
+                    real = real.to(device)
+                    fake = fake.to(device)
+
+                    generator_content_loss = content_criterion(fake, real.float())
+
+                    output = netD(fake.detach())
+                    output = output.view(-1)
+
+                    ones_const = Variable(torch.ones(real.size()[0]))
+                    ones_const = ones_const.to(device)
+
+                    generator_adversarial_loss = adverserial_criterion(output, ones_const.float())
+                    errG = generator_content_loss + 1e-3 * generator_adversarial_loss
+
+                    validation_loss_G.append(errG)
+
+
+
+
+
             print('[%d/%d][%d/%d] Loss_D: %.4f Loss_G: %.4f' % (
             epoch, 25, i, len(training_loader), errD.data[0], errG.data[0]))
 
@@ -183,3 +250,15 @@ if __name__ == '__main__':
 
     torch.save(netD, 'Discriminator.pt')
     torch.save(netG, 'Generator.pt')
+
+    training_loss_G = np.array(training_loss_G)
+    validation_loss_G = np.array(validation_loss_G)
+    psnrint = np.array(psnrint)
+    psnrgen = np.array(psnrgen)
+
+    np.save("training_loss_G", training_loss_G)
+    np.save("validation_loss_g", validation_loss_G)
+    np.save("psnrint", psnrint)
+    np.save("psnrgen", psnrgen)
+
+
