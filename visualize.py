@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
     plt.show()
 
-    fig.savefig('Visualization.png', dpi=fig.dpi)
+    fig.savefig('Visualization%03d.png'%(args.epoch), dpi=fig.dpi)
