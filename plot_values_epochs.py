@@ -32,8 +32,8 @@ if __name__ == '__main__':
     fig1.savefig('PSNROverEpochs.png', dpi = fig1.dpi)
 
     fig2 = plt.figure()
-    plt.plot(np.array([i+1 for i in range(args.images)]), tl_g)
-    plt.plot(np.array([i+1 for i in range(args.images)]), vl_g)
+    plt.plot(np.array([i+1 for i in range(epochs)]), tl_g)
+    plt.plot(np.array([i+1 for i in range(epochs)]), vl_g)
     plt.legend(['Training Loss', 'Validation Loss'])
     plt.title('Generator Loss')
     plt.xlabel('Epoch')
