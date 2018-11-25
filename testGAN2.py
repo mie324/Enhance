@@ -68,9 +68,7 @@ if __name__ == '__main__':
     batchSize = 64
     imageSize = 64
     lr = 0.0002
-    transform = transforms.Compose([transforms.Scale(imageSize), transforms.ToTensor(),
-                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5,
-                                                                           0.5)), ])  # We create a list of transformations (scaling, tensor conversion, normalization) to apply to the input images.
+
     netG, criterion, optimizerG = load_GAN(lr=lr)
     netG = netG.to(device)
     netG.apply(weights_init)
@@ -78,10 +76,6 @@ if __name__ == '__main__':
     netD, criterion, optimizerD = load_DISC(lr=lr)
     netD = netD.to(device)
     netD.apply(weights_init)
-
-
-    #feature_extractor = FeatureExtractor(torchvision.models.vgg19(pretrained=True))
-    #feature_extractor = feature_extractor.to(device)
 
     content_criterion = nn.MSELoss()
     adverserial_criterion = nn.BCELoss()
