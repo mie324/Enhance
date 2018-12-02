@@ -6,3 +6,4 @@
 6. evaluating.py has a function used to calculates psnr for our interpolated and generated images
 7. training_loss_g.npy and validation_loss_g.npy store our loss over the various epochs
 8. resultsPSNR.py if run will evaluate PSNR on the generated images in the results file as well as produce bicubically interpolated images and calculate their PSNR
+9. plot_values_epochs.py plots the PSNR and generator loss over time for the training and validation and bicubically interpolated images
