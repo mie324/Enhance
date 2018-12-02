@@ -9,7 +9,7 @@ torch.manual_seed(0)
 
 
 class G(nn.Module):
-    def __init__(self, blocks=16, upsample_factor=2):
+    def __init__(self, blocks=16, upsample_factor=2): 
         super(G, self).__init__()
 
         '''Number of residual blocks to be added'''
