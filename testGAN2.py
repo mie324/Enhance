@@ -166,7 +166,7 @@ if __name__ == '__main__':
 
 
 
-            ## Sending to evaluate from validation set
+            ## Sending to evaluate from validation set 
 
             if i == 0:
 
