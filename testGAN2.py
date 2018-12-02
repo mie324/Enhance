@@ -14,7 +14,7 @@ from dataset import ImgDataset
 import numpy as np
 from sklearn.model_selection import train_test_split
 import torchvision
-from evaluating import evaluate
+from evaluating import evaluate 
 
 torch.manual_seed(0)
 np.random.seed(0)
